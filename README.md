@@ -5,7 +5,7 @@ In this repository, we provide the R scripts to reproduce the results and figure
 
 ## Dependency
 Install dependency packages:
-```{R}
+```R
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 BiocManager::install(c("org.Hs.eg.db", "DESeq2", "AnnotationDbi", "clusterProfiler")
