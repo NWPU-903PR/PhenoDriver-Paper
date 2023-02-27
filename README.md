@@ -13,6 +13,8 @@ BiocManager::install(c("org.Hs.eg.db", "DESeq2", "AnnotationDbi", "clusterProfil
 if (!requireNamespace("devtools", quietly = TRUE))
     install.packages("devtools")
 devtools::install_github("NWPU-903PR/PhenoDriverR")
+
+install.packages('readr')
 ```
 
 ## Directory Tree

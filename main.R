@@ -45,6 +45,23 @@ genescore_individual <- calDrivingForce(STN,
                                         15)
 
 # Get driver genes from driving force matrix
-drivergenes <- getDriverGenes(drivingforcelist = genescore_individual,
+drivergenes <- getDriverGenes(drivingforcelist = genescore_individual$genescore,
                               cancerData = cancerData)
 
+# Get driver-associated abnormal pathways (TP53 as an example)
+tp53relatedpathway <- getDriverRelatedPathway(drivingforcelist = genescore_individual$genescore,
+                                              enrichreactomeRes = enrichreactomeRes,
+                                              drivergenes = drivergenes,
+                                              quary = 'TP53')
+
+# Get edgelist of TP53 regulatory paths to some cell cycle associated abnormal pathways
+regulation_path_edgelist <- getRegulatoryPath(drivergenes = drivergenes,
+                                              zscore_ind = genescore_individual$zscore,
+                                              network = STN,
+                                              quary = 'TP53',
+                                              quary_pathway = c('EML4 and NUDC in mitotic spindle formation',
+                                                                'Resolution of Sister Chromatid Cohesion',
+                                                                'Mitotic Prometaphase',
+                                                                'RHO GTPases Activate Formins',
+                                                                'Separation of Sister Chromatids',
+                                                                'Amplification of signal from unattached kinetochores via a MAD2 inhibitory signal'))
