@@ -1,4 +1,4 @@
-library(PhenoDriver)
+library(PhenoDriverR)
 library(readr)
 library(AnnotationDbi)
 library(org.Hs.eg.db)
@@ -6,8 +6,8 @@ library(org.Hs.eg.db)
 # Inpute data
 expN <- read_csv("./data/BRCA_NT_Rawcounts.csv")
 expT <- read_csv('./data/BRCA_TP_Rawcounts.csv')
-mutationData <- read.delim('./data/MC3_BRCA.maf')
-reactome <- read.delim('./data/NCBI2Reactome.txt',header = F)
+mutationData <- read_tsv('./data/MC3_BRCA.maf.gz', progress = TRUE, col_types = cols())
+reactome <- read.delim('./data/NCBI2Reactome.txt', header = F)
 STN <- read.delim('./data/SignalTransductionNet.txt')
 
 # Data per-processing
@@ -20,13 +20,13 @@ cancerData <- dataPerProcessing(expressionData = expressionData,
 
 # Differential expression analysis
 diffexpgene <- DEA(exp = cancerData$expressionData,
-                   parallelworker = 40,
+                   parallelworker = 10,
                    genenamecol = 2,
                    annotationcol = 2)
 
 reactome <- reactome[reactome$V6 == 'Homo sapiens', 1:4]
 reactome <- unique(reactome)
-reactome$V1 <- AnnotationDbi::select(org.Hs.eg.db, keys = reactome$V1, columns = 'SYMBOL')$SYMBOL
+reactome$V1 <- select(org.Hs.eg.db, keys = reactome$V1, columns = 'SYMBOL')$SYMBOL
 reactome <- unique(reactome)
 reactome <- reactome[!(is.na(reactome$V1)),]
 reactome <- reactome[reactome$V4 %in% names(table(reactome$V4)[table(reactome$V4) > 10 &
@@ -35,14 +35,14 @@ reactome <- reactome[reactome$V4 %in% names(table(reactome$V4)[table(reactome$V4
 # Get personalized abnormal pathways
 enrichreactomeRes <- pAbnormalPathway(diff = diffexpgene,
                                       reactome = reactome,
-                                      parallelworker = 40)
+                                      parallelworker = 10)
 
 # Calculating driving force matrix for each patient
-genescore_individual <- calDrivingForce(STN,
-                                        diffexpgene,
-                                        enrichreactomeRes,
-                                        reactome,
-                                        15)
+genescore_individual <- calDrivingForce(network = STN,
+                                        diffexpgene = diffexpgene,
+                                        enrichreactomeRes = enrichreactomeRes,
+                                        reactome = reactome,
+                                        parallelworker = 10)
 
 # Get driver genes from driving force matrix
 drivergenes <- getDriverGenes(drivingforcelist = genescore_individual$genescore,
