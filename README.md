@@ -22,6 +22,7 @@ install.packages('readr')
 ├─data                             [the code of biRFR framework]
 | ├─BRCA_NT_Rawcounts.csv          [the gene expression matrix of normal samples for breast cancer]
 | ├─BRCA_TP_Rawcounts.csv          [the gene expression matrix of Tumor patients for breast cancer]
+| ├─Cluster_Info.csv               [The clinical and subtype information of patients]
 | ├─MC3_BRCA.maf.gz                [Breast cancer MC3 mutation data after compress]
 | ├─NCBI2Reactome.txt              [NCBI gene ID to Reactome pathway terms mapping (v79)]
 | └─SignalTransductionNet.txt      [Signal Transduction Network (STN) edge list file]
